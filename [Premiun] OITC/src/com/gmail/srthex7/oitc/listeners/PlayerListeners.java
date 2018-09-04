@@ -34,6 +34,7 @@ import com.gmail.srthex7.oitc.system.ArenaUtils;
 import com.gmail.srthex7.oitc.system.lobby.Lobby;
 import com.gmail.srthex7.oitc.system.lobby.Utilities;
 import com.gmail.srthex7.oitc.system.player.GPlayer;
+import com.gmail.srthex7.oitc.utils.Msg;
 import com.gmail.srthex7.oitc.utils.vanish.VanishSystem;
 
 public class PlayerListeners implements Listener {
@@ -69,6 +70,8 @@ public class PlayerListeners implements Listener {
 		} else {
 			if (Lobby.getSpawnpoint() != null) {
 				player.teleport(Lobby.getSpawnpoint());
+			} else {
+				player.sendMessage(Msg.playeMessage("Please, use /oitc lobby to set the lobby"));
 			}
 			//Scoreboard
 			Bukkit.getScheduler().scheduleSyncDelayedTask(OITC.getInstance(), () -> {

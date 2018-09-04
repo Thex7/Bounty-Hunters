@@ -122,7 +122,7 @@ public class EPlayerListeners implements Listener{
 				eplayer.getArena().save();
 				eplayer.remove();
 				//e.getPlayer().sendMessage("Arena creada correctamente");
-				e.getPlayer().sendMessage(ChatColor.GREEN + "Sand created correctly");
+				e.getPlayer().sendMessage(ChatColor.GREEN + "Arena created correctly");
 			}
 		}
 	}

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
+import org.bukkit.EntityEffect;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -237,6 +239,8 @@ public class ArenaListeners implements Listener {
 		
 		Sounds.playSound(player, Sounds.WITHER_SHOOT.bukkitSound());
 		Sounds.playSound(killer, Sounds.NOTE_PLING.bukkitSound());
+		
+		player.playEffect(null, Effect.BLAZE_SHOOT, 20F);
 		
 		player.setHealth(player.getMaxHealth());
 		killer.setHealth(killer.getMaxHealth());

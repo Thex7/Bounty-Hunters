@@ -2,6 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="C:/Users/Cristhian/Desktop/Entretenimiento/Varios/Plugins, proyectos y pruebas/API/spigot-1.12.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Cristhian/Desktop/Entretenimiento/Varios/Plugins, proyectos y pruebas/API/spigots/spigot-1.12.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

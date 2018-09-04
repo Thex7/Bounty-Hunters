@@ -2,6 +2,7 @@ package com.gmail.srthex7.oitc.system;
 
 import java.util.HashMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import com.gmail.srthex7.multicore.command.Command;
@@ -17,6 +18,7 @@ import com.gmail.srthex7.oitc.utils.Perms;
 public class StaffCommands {
 	
 	private HashMap<String,String> commandinfo = new HashMap<String,String>();
+	private String bar = ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "---------------------------------------";
 	
 	public StaffCommands(OITC plugin) {
 		plugin.getFramework().registerCommands(this);
@@ -25,14 +27,22 @@ public class StaffCommands {
 		commandinfo.put("oitc", "Show all the staff commands");
 		commandinfo.put("oitc create", "Create an arena");
 		commandinfo.put("oitc delete <name>", "Remove an arena");
+		commandinfo.put("oitc lobby", "Set lobby");
+		commandinfo.put("oitc leave", "Leave arena");
+		commandinfo.put("oitc arenas", "View all arenas");
 	}
 	
 	
 	@Command(name = "oitc", permission = Perms.CREATOR)
 	public void oitc(CommandArgs args) {
+		
+		args.getSender().sendMessage(bar);
+		args.getSender().sendMessage(ChatColor.GREEN + "Commands");
+		args.getSender().sendMessage(bar);
 		for(String command : commandinfo.keySet()) {
 			args.getSender().sendMessage(Msg.CommandList(command, commandinfo.get(command)));
 		}
+		args.getSender().sendMessage(bar);
 	}
 	
 	@Command(name = "oitc.create", permission = Perms.CREATOR)
@@ -47,9 +57,13 @@ public class StaffCommands {
 	
 	@Command(name = "oitc.arenas", permission = Perms.CREATOR)
 	public void arenas(CommandArgs args) {
+		args.getSender().sendMessage(bar);
+		args.getSender().sendMessage(ChatColor.GREEN + "Arenas" + ChatColor.DARK_GRAY + ": " + ChatColor.GRAY + Arena.getArenas().size());
+		args.getSender().sendMessage(bar);
 		for (Arena arena : Arena.getArenas()) {
 			args.getSender().sendMessage(Msg.viewArenas(arena));
 		}
+		args.getSender().sendMessage(bar);
 	}
 	
 	@Command(name = "oitc.lobby", permission = Perms.CREATOR)

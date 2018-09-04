@@ -2,6 +2,7 @@ package com.gmail.srthex7.oitc.utils;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import com.gmail.srthex7.oitc.OITC;
@@ -21,7 +22,7 @@ public class Msg {
 	 * @return formato con el que se mostrara el texto
 	 */
 	public static String CommandList(String command, String description) {
-		return "§e/" + command + "§8: §7" + description;
+		return ChatColor.GREEN + command + "§8: " + ChatColor.GRAY + description;
 	}
 	
 	/**
@@ -63,7 +64,7 @@ public class Msg {
 	 * @param log mensaje
 	 */
 	public static void log(String log) {
-		System.out.println("[" + OITC.getInstance().getName() + "] " + log);
+		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "OITC >" + ChatColor.GRAY + log);
 	}
 	
 	public static String info(String info) {
@@ -71,7 +72,11 @@ public class Msg {
 	}
 	
 	public static String viewArenas(Arena arena) {
-		return ChatColor.YELLOW + " - " + arena.getArenaname();
+		return ChatColor.GRAY + "> " + 
+	ChatColor.GREEN + arena.getArenaname() + ChatColor.GRAY + " : " + 
+	ChatColor.GREEN + arena.getMapname() + ChatColor.GRAY + " : " + 
+	ChatColor.GREEN + arena.getArenaState().toString() + ChatColor.GRAY + " : " + 
+	ChatColor.GREEN + "(" + ChatColor.GRAY +  arena.getPlayerUuids().size() + ChatColor.GREEN + "/" + ChatColor.GRAY +  arena.getMaxusers() + ChatColor.GREEN + ")";
 	}
 	
 	public static String playeMessage(String text) {
