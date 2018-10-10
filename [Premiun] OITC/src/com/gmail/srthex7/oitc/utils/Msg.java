@@ -5,7 +5,6 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-import com.gmail.srthex7.oitc.OITC;
 import com.gmail.srthex7.oitc.system.Arena;
 
 /**

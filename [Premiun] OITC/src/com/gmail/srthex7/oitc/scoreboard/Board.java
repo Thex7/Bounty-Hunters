@@ -13,7 +13,6 @@ import com.gmail.srthex7.multicore.Scoreboard.PlayerScoreboard;
 import com.gmail.srthex7.oitc.game.Settings;
 import com.gmail.srthex7.oitc.system.Arena;
 import com.gmail.srthex7.oitc.system.player.GPlayer;
-import com.gmail.srthex7.oitc.utils.Position;
 
 public class Board {
 

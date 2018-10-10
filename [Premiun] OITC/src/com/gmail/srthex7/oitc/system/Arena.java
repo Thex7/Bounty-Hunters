@@ -21,6 +21,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.gmail.srthex7.multicore.File.ConfigUtil;
+import com.gmail.srthex7.multicore.Others.Utils;
 import com.gmail.srthex7.multicore.Regions.Loc;
 import com.gmail.srthex7.oitc.OITC;
 import com.gmail.srthex7.oitc.api.LeaveReason;
@@ -292,9 +293,65 @@ public class Arena {
 		if (!this.state.equals(ArenaState.INGAME)) return;
 		
 		targets.clear();
-		List<UUID> copyuuid = new ArrayList<>();
-		copyuuid.addAll(this.uuids);
 		
+		HashMap<String, String> localtargets = new HashMap<>();
+		
+		ArrayList<String> players = new ArrayList<>();
+		
+		for (UUID uuid : this.uuids) {
+			players.add(Bukkit.getPlayer(uuid).getName());
+			localtargets.put(Bukkit.getPlayer(uuid).getName(), "");
+		}
+		
+		for (String p : (ArrayList<String>)players.clone()) {
+			if (players.size() > 1) {
+				String target = players.get(Utils.rndInt(0, players.size()-1));
+				
+				while (target.equals(p)) {
+					target = players.get(Utils.rndInt(0, players.size()-1));
+				}
+				
+				int tried = 3;
+				
+				while (localtargets.get(target).equals(p) && tried > 0) {
+					String temptarget = players.get(Utils.rndInt(0, players.size()-1));
+					if (!temptarget.equals(p)) {
+						target = temptarget;
+					}
+					tried--;
+				}
+				
+				localtargets.put(p, target);
+				players.remove(target);
+			} else {
+				String target = players.get(0);
+				
+				while (target.equals(p)) {
+					target = Bukkit.getPlayer(this.uuids.get(Utils.rndInt(0, this.uuids.size()-1))).getName();
+				}
+				
+				int tried = 3;
+				
+				while (localtargets.get(target).equals(p) && tried > 0) {
+					String temptarget = Bukkit.getPlayer(this.uuids.get(Utils.rndInt(0, this.uuids.size()-1))).getName();
+					if (!temptarget.equals(p)) {
+						target = temptarget;
+					}
+					tried--;
+				}
+				
+				localtargets.put(p, target);
+			}
+		}
+		
+		
+		for (String key : localtargets.keySet()) {
+			this.changeTarget(Bukkit.getPlayer(key), Bukkit.getPlayer(localtargets.get(key)));
+		}
+		
+		
+		
+		/*
 		while (!copyuuid.isEmpty()) {
 			Player p1 = null;
 			Player p2 = null;
@@ -311,10 +368,18 @@ public class Arena {
 				Player p3 = Bukkit.getPlayer(copyuuid.remove(0));
 				this.changeTarget(p3, p1);
 			}
-		}
+		}*/
 		timeToRandomizeTargets = Settings.timeToRandomizeTargets;
 	}
 
+	/**
+	 * Retorna un hashmap con los objetivos <jugador, objetivo>
+	 * @return hashmap con objetivos
+	 */
+	public HashMap<String,String> getTargets() {
+		return this.targets;
+	}
+	
 	/**
 	 * Cambia los objetivos de los jugadores
 	 * @param player jugador
@@ -387,14 +452,6 @@ public class Arena {
 	 */	
 	public void sortedKills() {
 		sortedkills.clear();
-		
-	/*	Comparator<Entry<String, Integer>> comparator = new Comparator<Map.Entry<String, Integer>>() {
-			@Override
-			public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
-				return o2.getValue().compareTo(o1.getValue());
-			}
-		};*/
-		
 		sortedkills = kills.entrySet().stream().sorted((Entry<String, Integer> o1, Entry<String, Integer> o2) -> o2.getValue().compareTo(o1.getValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 	}
 	

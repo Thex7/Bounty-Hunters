@@ -1,8 +1,7 @@
 package com.gmail.srthex7.oitc;
 
-import java.text.SimpleDateFormat;
-
 import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -14,6 +13,7 @@ import com.gmail.srthex7.oitc.game.Settings;
 import com.gmail.srthex7.oitc.listeners.ArenaListeners;
 import com.gmail.srthex7.oitc.listeners.PlayerListeners;
 import com.gmail.srthex7.oitc.system.Arena;
+import com.gmail.srthex7.oitc.system.Particles;
 import com.gmail.srthex7.oitc.system.StaffCommands;
 import com.gmail.srthex7.oitc.system.Task;
 import com.gmail.srthex7.oitc.system.editor.EPlayerListeners;
@@ -43,6 +43,9 @@ public class OITC extends JavaPlugin{
 	
 		BukkitRunnable task = new Task();
 		task.runTaskTimerAsynchronously(this, 0l, 20l);
+		
+		BukkitRunnable taskparticles = new Particles();
+		taskparticles.runTaskTimer(this, 0l, 2l);
 	}
 	
 	public CommandFramework getFramework() {
@@ -70,6 +73,7 @@ public class OITC extends JavaPlugin{
 	}
 	
 	public void loadArenas() {
+		if (Bukkit.getWorld("world") != null) Bukkit.getWorld("world").setDifficulty(Difficulty.PEACEFUL);
 		Arena.loadAll();
 	}
 	

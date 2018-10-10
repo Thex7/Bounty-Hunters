@@ -12,6 +12,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -19,11 +20,11 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.gmail.srthex7.oitc.OITC;
+import com.gmail.srthex7.oitc.api.LeaveReason;
 import com.gmail.srthex7.oitc.api.OitcPlayerJoinArenaEvent;
 import com.gmail.srthex7.oitc.api.OitcPlayerQuitArenaEvent;
 import com.gmail.srthex7.oitc.api.OitcPlayerReturnLobbyEvent;
 import com.gmail.srthex7.oitc.api.OitcPreStartEvent;
-import com.gmail.srthex7.oitc.api.LeaveReason;
 import com.gmail.srthex7.oitc.game.Lang;
 import com.gmail.srthex7.oitc.game.Settings;
 import com.gmail.srthex7.oitc.scoreboard.Board;
@@ -78,8 +79,6 @@ public class PlayerListeners implements Listener {
 				Board.setScoreboardLobby(e.getPlayer());
 			},1l);
 		}
-		
-	
 	}
 	
 	@EventHandler
@@ -199,10 +198,10 @@ public class PlayerListeners implements Listener {
 		Player player = Bukkit.getPlayer(e.getPlayer().getUuid());
 		
 		VanishSystem.playerJoinLobby(player);
-		
+		e.getPlayer().setArena(null);
 		Lobby.getUuids().add(e.getPlayer().getUuid());
 		Lobby.sendItems(player);
-		
+		player.setHealth(player.getMaxHealth());
 		//Scoreboard
 		Board.removeAllEntry(player);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(OITC.getInstance(), () -> {
@@ -255,6 +254,18 @@ public class PlayerListeners implements Listener {
 	
 	@EventHandler
 	public void onInventoryMoveItem(InventoryMoveItemEvent e) {
+		e.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e) {
+		GPlayer gplayer = GPlayer.getGPlayer(e.getPlayer().getUniqueId());
+		String format = ChatColor.GRAY + e.getPlayer().getName() + ": " + e.getMessage();
+		if (gplayer.getArena() == null) {
+			Lobby.broadcastMessage(format);
+		} else {
+			gplayer.getArena().broadcastMessage(format);
+		}
 		e.setCancelled(true);
 	}
 }

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import com.gmail.srthex7.oitc.system.Arena;
-import com.gmail.srthex7.oitc.utils.vanish.PlayerVanishData;
 
 /**
  * Clase que administra los datos de un jugador

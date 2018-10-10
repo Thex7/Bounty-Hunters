@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Effect;
-import org.bukkit.EntityEffect;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -21,6 +21,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.srthex7.multicore.Others.Utils;
 import com.gmail.srthex7.oitc.OITC;
+import com.gmail.srthex7.oitc.api.OitcChangeTargetEvent;
 import com.gmail.srthex7.oitc.api.OitcFinishEvent;
 import com.gmail.srthex7.oitc.api.OitcPlayerDeathEvent;
 import com.gmail.srthex7.oitc.api.OitcPlayerKillTargetEvent;
@@ -42,6 +43,7 @@ public class ArenaListeners implements Listener {
 	@EventHandler
 	public void onOitcPreStart(OitcPreStartEvent e) {
 		e.getArena().setArenaState(ArenaState.STARTING);
+		
 		new BukkitRunnable() {
 			int timeToStart = Settings.timeToStartArena;
 			@Override
@@ -50,12 +52,12 @@ public class ArenaListeners implements Listener {
 				
 				if (e.getArena().getPlayerUuids().size() < e.getArena().getMinusers()) {
 					e.getArena().setArenaState(ArenaState.WAITING);
-					for (UUID uuid : e.getArena().getPlayerUuids()) {
+					e.getArena().getPlayerUuids().forEach(uuid -> {
 						Player player = Bukkit.getPlayer(uuid);
 						if (player != null) {
 							Board.setScoreboardPreGame(player, e.getArena());
 						}
-					}
+					});
 					cancel();
 				}
 				
@@ -142,23 +144,20 @@ public class ArenaListeners implements Listener {
 		message.add("");
 		message.add("&e&m-----------------------------------------");
 		
-		for (UUID uuid : e.getArena().getPlayerUuids()) {
+		e.getArena().getPlayerUuids().forEach(uuid -> {
 			Player player = Bukkit.getPlayer(uuid);
 			if (player != null) {
 				CenterMessage.sendCenteredMessage(player, message);
+				player.playSound(player.getLocation(),Sounds.LEVEL_UP.bukkitSound(), 2.0f, 2.0f);
 			}
-		}
+		});
 		
-		
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				if (!Settings.autoArena) {
-					Lobby.callPlayersInArena(e.getArena());
-				} 
-				e.getArena().reset();
-			}
-		}.runTaskLater(OITC.getInstance(), Settings.timeToStopArena*20);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(OITC.getInstance(), ()-> {
+			if (!Settings.autoArena) {
+				Lobby.callPlayersInArena(e.getArena());
+			} 
+			e.getArena().reset();
+		},Settings.timeToStopArena*20);
 	}
 	
 	@EventHandler
@@ -240,8 +239,6 @@ public class ArenaListeners implements Listener {
 		Sounds.playSound(player, Sounds.WITHER_SHOOT.bukkitSound());
 		Sounds.playSound(killer, Sounds.NOTE_PLING.bukkitSound());
 		
-		player.playEffect(null, Effect.BLAZE_SHOOT, 20F);
-		
 		player.setHealth(player.getMaxHealth());
 		killer.setHealth(killer.getMaxHealth());
 		
@@ -255,8 +252,8 @@ public class ArenaListeners implements Listener {
 		
 		if (e.getArena().existTarget(killer)) {
 			if (e.getArena().getTargetName(killer).equals(player.getName())) {
-				Bukkit.getPluginManager().callEvent(new OitcPlayerKillTargetEvent(e.getKiller(),e.getPlayer(),e.getArena()));
 				e.getArena().addKill(killer);
+				Bukkit.getPluginManager().callEvent(new OitcPlayerKillTargetEvent(e.getKiller(),e.getPlayer(),e.getArena()));
 			}
 		}
 		
@@ -275,6 +272,19 @@ public class ArenaListeners implements Listener {
 	
 	@EventHandler
 	public void onOitcPlayerKillTargetEvent(OitcPlayerKillTargetEvent e) {
+		Player target = Bukkit.getPlayer(e.getTarget().getUuid());
+		Player killer = Bukkit.getPlayer(e.getKiller().getUuid());
+		e.getArena().getTargets().put(killer.getName(), ChatColor.STRIKETHROUGH + target.getName());
+//		e.getArena().getTargets().remove(killer.getName());
+	}
+	
+	
+	@EventHandler
+	public void onOitcChangeTarget(OitcChangeTargetEvent e) {
+		Player player = Bukkit.getPlayer(e.getPlayer().getUuid());
+		Player target = Bukkit.getPlayer(e.getTarget().getUuid());
+		
+		
 		
 	}
 	

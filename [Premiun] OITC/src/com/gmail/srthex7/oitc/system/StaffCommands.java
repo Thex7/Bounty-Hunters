@@ -28,7 +28,7 @@ public class StaffCommands {
 		commandinfo.put("oitc create", "Create an arena");
 		commandinfo.put("oitc delete <name>", "Remove an arena");
 		commandinfo.put("oitc lobby", "Set lobby");
-		commandinfo.put("oitc leave", "Leave arena");
+		commandinfo.put("leave", "Leave arena");
 		commandinfo.put("oitc arenas", "View all arenas");
 	}
 	

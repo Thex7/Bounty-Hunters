@@ -50,4 +50,13 @@ public class Lobby {
 		player.getInventory().clear();
 		player.getInventory().setItem(0, Utilities.getSearchRoom());
 	}
+	
+	public static void broadcastMessage(String message) {
+		for (UUID uuid : uuids) {
+			Player player = Bukkit.getPlayer(uuid);
+			if (player != null) {
+				player.sendMessage(message);
+			}
+		}
+	}
 }

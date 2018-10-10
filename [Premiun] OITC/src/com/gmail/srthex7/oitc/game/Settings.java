@@ -6,6 +6,7 @@ import com.gmail.srthex7.multicore.File.ConfigUtil;
 import com.gmail.srthex7.multicore.Regions.Loc;
 import com.gmail.srthex7.oitc.OITC;
 import com.gmail.srthex7.oitc.scoreboard.Board;
+import com.gmail.srthex7.oitc.system.ArenaState;
 import com.gmail.srthex7.oitc.system.lobby.Lobby;
 import com.gmail.srthex7.oitc.system.lobby.Utilities;
 
@@ -14,11 +15,11 @@ public class Settings {
 	public static boolean autoArena = false;
 	public static String positionFormat = "<playername>: &a<score>";
 	
-	public static final int timeToStartArena = 10;
-	public static final int timeToStopArena = 10;
+	public static int timeToStartArena = 10;
+	public static int timeToStopArena = 10;
 	
-	public static final int timeToEnd = 300;
-	public static final int timeToRandomizeTargets = 50;
+	public static final int timeToEnd = 240;
+	public static final int timeToRandomizeTargets = 40;
 	
 	public static String domain = "www.example.com";
 	public static String date = "";
@@ -29,7 +30,12 @@ public class Settings {
 	
 	public Settings() {
 		ConfigUtil cu = new ConfigUtil(OITC.getInstance(), "settings");
-		this.createYaml(cu);
+		
+		if (cu.exist()) {
+			this.loadYaml(cu);
+		} else {
+			this.createYaml(cu);
+		}
 		
 		date = new SimpleDateFormat("M/dd/yyyy").toString();
 		
@@ -41,7 +47,6 @@ public class Settings {
 	}
 	
 	private void createYaml(ConfigUtil cu) {
-		
 		Board.pregame.add("");
 		Board.pregame.add("Map: &a<map>" );
 		Board.pregame.add("Players: &a<onlineplayers>/<maxplayers>");
@@ -50,7 +55,7 @@ public class Settings {
 		Board.pregame.add("");
 		Board.pregame.add("Server: &a<server>");
 		Board.pregame.add("");
-	//	Board.pregame.add("&6<domain>");
+		Board.pregame.add("&6<domain>");
 		
 		Board.ingame.add("&7<date>");
 		Board.ingame.add("");
@@ -77,14 +82,17 @@ public class Settings {
 		Board.lobby.add("Losses: &a<losses>");
 		Board.lobby.add("Played: &a<played>");
 		Board.lobby.add("");
-	//	Board.lobby.add("<domain>");
+		Board.lobby.add("<domain>");
 		
 		Utilities.arenaDescription.add("&7Map: &a<map>");
 		Utilities.arenaDescription.add("&7State: &a<state>");
 		Utilities.arenaDescription.add("&7Players: &a<onlineplayers>/<maxplayers>");
 		
-	/*	cu.getConfig().set("scoreboard.pregame", Board.pregame);
+		cu.getConfig().set("scoreboard.lobby", Board.lobby);
+		cu.getConfig().set("scoreboard.pregame", Board.pregame);
 		cu.getConfig().set("scoreboard.ingame", Board.ingame);
+		
+		cu.getConfig().set("arenaDescription", Utilities.arenaDescription);
 		
 		cu.getConfig().set("autoArena", autoArena);
 		cu.getConfig().set("positionFormat", positionFormat);
@@ -95,8 +103,28 @@ public class Settings {
 		for (ArenaState state : ArenaState.values()) {
 			cu.getConfig().set(state.name().toLowerCase(), state.toString());
 		}
-		*/
 		
+		Utilities.applyColors();
+		
+		cu.save();
+	}
+	
+	public void loadYaml(ConfigUtil cu) {
+		
+		Board.lobby = cu.getConfig().getStringList("scoreboard.lobby");
+		Board.pregame = cu.getConfig().getStringList("scoreboard.pregame");
+		Board.ingame = cu.getConfig().getStringList("scoreboard.ingame");
+		
+		Utilities.arenaDescription = cu.getConfig().getStringList("arenaDescription");
+		
+		autoArena = cu.getConfig().getBoolean("autoArena");
+		positionFormat = cu.getConfig().getString("positionFormat");
+		timeToStartArena = cu.getConfig().getInt("timeToStartArena");
+		timeToStopArena = cu.getConfig().getInt("timeToStopArena");
+		
+		for (ArenaState state : ArenaState.values()) {
+			state.setStateString(cu.getConfig().getString(state.name().toLowerCase()));
+		}
 		
 		Utilities.applyColors();
 	}

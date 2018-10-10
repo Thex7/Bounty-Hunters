@@ -18,7 +18,7 @@ public enum ArenaState {
 		return statename;
 	}
 
-	public void setStatename(String statename) {
+	public void setStateString(String statename) {
 		this.statename = statename;
 	}
 	
@@ -26,4 +26,5 @@ public enum ArenaState {
 	public String toString() {
 		return this.statename;
 	}
+	
 }

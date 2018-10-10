@@ -1,12 +1,10 @@
 package com.gmail.srthex7.oitc.utils.vanish;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.gmail.srthex7.oitc.game.Settings;
 import com.gmail.srthex7.oitc.system.Arena;
 import com.gmail.srthex7.oitc.system.lobby.Lobby;
 
